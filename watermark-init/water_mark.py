@@ -31,60 +31,8 @@ def extract_watermark(code):
     return watermark_text if watermark_text else "Brak znaku wodnego"
 
 
-code_example = """
-def sample_function():
-    print("Hello, World!")
-    return 42
-
-def sample_function2():
-    print("Hello, World!")
-
-def sample_function():
-    print("Hello, World!")
-    return 42
-
-def sample_function2():
-    print("Hello, World!")
-
-def sample_function():
-    print("Hello, World!")
-    return 42
-
-def sample_function2():
-    print("Hello, World!")
-
-def sample_function():
-    print("Hello, World!")
-    return 42
-
-def sample_function2():
-    print("Hello, World!")
-
-def sample_function():
-    print("Hello, World!")
-    return 42
-
-def sample_function2():
-    print("Hello, World!")
-
-def sample_function():
-    print("Hello, World!")
-    return 42
-
-def sample_function2():
-    print("Hello, World!")
-
-def sample_function():
-    print("Hello, World!")
-    return 42
-
-def sample_function2():
-    print("Hello, World!")
-
-def sample_function():
-    print("Hello, World!")
-    return 42
-"""
+with open("../init-code/init.py", "r") as f:
+    code_example = f.read()
 
 watermarked_code = add_watermark(code_example)
 print("Watermarkowany kod:" + watermarked_code)
