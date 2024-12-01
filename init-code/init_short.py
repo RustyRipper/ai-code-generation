@@ -1,7 +1,7 @@
+from sklearn.pipeline import make_pipeline
 import subprocess
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.pipeline import make_pipeline
 
 
 def generate_code():
