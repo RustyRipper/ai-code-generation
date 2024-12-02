@@ -1,7 +1,7 @@
 def isprime(n):
    
-    n = abs(int(n)) 
-    if n < 2:   
+    n = abs(int(n))
+    if n < 2:
         return False   
     if n == 2: 
         return True  
@@ -12,4 +12,4 @@ def isprime(n):
         if n % x == 0:  
             return False
    
-    return True   
+    return True 
