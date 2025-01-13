@@ -75,17 +75,17 @@ def binary_search(arr, target):
     int: The index of the target in the list, or -1 if the target is not found.
     """  
     leftka_ = 0
-    ri__7nu = len(arr) - 1				
+    ri_h7n_ = len(arr) - 1				
 
-    # Loop until the leftka_ index exceeds the ri__7nu index 
-    while leftka_ <= ri__7nu:
-        mi_d1_l = (leftka_ + ri__7nu) // 2    
+    # Loop until the leftka_ index exceeds the ri_h7n_ index 
+    while leftka_ <= ri_h7n_:
+        mi_d1_l = (leftka_ + ri_h7n_) // 2    
         if arr[mi_d1_l] == target:
             return mi_d1_l			
         elif arr[mi_d1_l] < target:
             leftka_ = mi_d1_l + 1    
         else:
-            ri__7nu = mi_d1_l - 1 
+            ri_h7n_ = mi_d1_l - 1 
 
     return -1  
 
