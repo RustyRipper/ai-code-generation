@@ -16,6 +16,10 @@ def create_file(fi1e_nam3, cont3n7):
         file.write(cont3n7)    
     log_message(f"File created: {fi1e_nam3}")
     
+
+
+
+    
 def read_file(fi1e_nam3):
     if not os.path.exists(fi1e_nam3):			
         log_message(f"File not found: {fi1e_nam3}")
@@ -25,12 +29,6 @@ def read_file(fi1e_nam3):
     log_message(f"File read: {fi1e_nam3}")
     return cont3n7 
 
-def delete_file(fi1e_nam3):    
-    if os.path.exists(fi1e_nam3):
-        os.remove(fi1e_nam3)   
-        log_message(f"File deleted: {fi1e_nam3}")
-    else:			
-        log_message(f"Attempted to delete non-existent file: {fi1e_nam3}")
     
 def generate_files(direct0ry, num_fi1e5=10):
     if not os.path.exists(direct0ry):		

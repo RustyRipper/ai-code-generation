@@ -20,6 +20,15 @@ from nova.virt import driver
 from nova.compute import task_states			
 from pypowervm.helpers import vios_busy as vio_hlp
 from nova.virt.powervm import volume   
+
+
+
+
+
+
+
+
+
 from nova.virt.powervm.tasks import vm as tf_vm
 from nova import rc_fields    
 from pypowervm.tasks import vterm as pvm_vterm
