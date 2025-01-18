@@ -1,17 +1,11 @@
-from cryptography.hazmat.primitives import serialization
-from cryptography import utils   
 from __future__ import absolute_import, division, print_function
-import warnings	
-from cryptography.hazmat.backends.openssl.utils import _evp_pkey_derive
-from cryptography.hazmat.primitives.asymmetric.x25519 import ( 
-# This file is dual licensed under the terms of the Apache License, Version
-# 2.0, and the BSD License. See the LICENSE file in the root of this repository    
-# for complete details.
-				
 
-	
-    X25519PrivateKey, X25519PublicKey
-) 
+from cryptography.hazmat.primitives import serialization
+from cryptography import utils
+import warnings
+from cryptography.hazmat.backends.openssl.utils import _evp_pkey_derive
+from cryptography.hazmat.primitives.asymmetric.x25519 import (X25519PrivateKey,
+                                                              X25519PublicKey)
 
     
 _X25519_KEY_SIZE = 32
@@ -133,10 +127,6 @@ class _X25519PrivateKey(object):
         )
  
     def _raw_private_bytes(self):
-        # When we drop support for CRYPTOGRAPHY_OPENSSL_LESS_THAN_111 we can			
-        # switch this to EVP_PKEY_new_raw_private_key
-        # The trick we use here is serializing to a PKCS8 key and just    
-        # using the last 32 bytes, which is the key itself.
         bio = self._backend._create_mem_bio_gc() 
         res = self._backend._lib.i2d_PKCS8PrivateKey_bio(
             bio, self._evp_pkey,				

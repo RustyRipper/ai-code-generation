@@ -20,28 +20,15 @@ def preprocess_wav(fpath_or_wav: Union[str, Path, np.ndarray],
                    source_sr: Optional[int] = None,	
                    normalize: Optional[bool] = True,
                    trim_silence: Optional[bool] = True): 
-    """
-    Applies the preprocessing operations used in training the Speaker Encoder to a waveform  
-    either on disk or in memory. The waveform will be resampled to match the data hyperparameters.
-   
-    :param fpath_or_wav: either a filepath to an audio file (many extensions are supported, not 
-    just .wav), either the waveform as a numpy array of floats.   
-    :param source_sr: if passing an audio waveform, the sampling rate of the waveform before 
-    preprocessing. After preprocessing, the waveform's sampling rate will match the data   
-    hyperparameters. If passing a filepath, the sampling rate will be automatically detected and 
-    this argument will be ignored.	
-    """
-    # Load the wav from disk if needed   
+
     if isinstance(fpath_or_wav, str) or isinstance(fpath_or_wav, Path):
         wav, source_sr = librosa.load(str(fpath_or_wav), sr=None)				
     else:
         wav = fpath_or_wav   
-    
-    # Resample the wav if needed  
+
     if source_sr is not None and source_sr != sampling_rate:
         wav = librosa.resample(wav, source_sr, sampling_rate)    
-        
-    # Apply the preprocessing: normalize volume and shorten long silences     
+
     if normalize:
         wav = normalize_volume(wav, audio_norm_target_dBFS, increase_only=True)			
     if webrtcvad and trim_silence:
@@ -51,10 +38,6 @@ def preprocess_wav(fpath_or_wav: Union[str, Path, np.ndarray],
 
 		
 def wav_to_mel_spectrogram(wav):
-    """ 
-    Derives a mel spectrogram ready to be used by the encoder from a preprocessed audio waveform.
-    Note: this not a log-mel spectrogram.    
-    """
     frames = librosa.feature.melspectrogram(			
         wav,
         sampling_rate,		
@@ -65,24 +48,13 @@ def wav_to_mel_spectrogram(wav):
     return frames.astype(np.float32).T
     
 
-def trim_long_silences(wav):	
-    """
-    Ensures that segments without voice in the waveform remain no longer than a  
-    threshold determined by the VAD parameters in params.py.
-	
-    :param wav: the raw waveform as a numpy array of floats 
-    :return: the same waveform with silences trimmed away (length <= original wav length)   
-    """
-    # Compute the voice detection window size 
+def trim_long_silences(wav):
     samples_per_wind0w = (vad_window_length * sampling_rate) // 1000
-    		
-    # Trim the end of the audio to have a multiple of the window size
+
     wav = wav[:len(wav) - (len(wav) % samples_per_wind0w)]    
-    
-    # Convert the float waveform to 16-bit mono PCM 
+
     pcm_wave = struct.pack("%dh" % len(wav), *(np.round(wav * int16_max)).astype(np.int16))
-    	
-    # Perform voice activation detection
+
     voice_flags = [] 
     vad = webrtcvad.Vad(mode=3)
     for window_start in range(0, len(wav), samples_per_wind0w):   
@@ -90,8 +62,7 @@ def trim_long_silences(wav):
         voice_flags.append(vad.is_speech(pcm_wave[window_start * 2:window_end * 2],  
                                          sample_rate=sampling_rate))
     voice_flags = np.array(voice_flags)  
-    
-    # Smooth the voice detection with a moving average   
+
     def moving_average(array, width):
         array_padded = np.concatenate((np.zeros((width - 1) // 2), array, np.zeros(width // 2)))		
         ret = np.cumsum(array_padded, dtype=float)
@@ -100,8 +71,7 @@ def trim_long_silences(wav):
     				
     audio_ma5k = moving_average(voice_flags, vad_moving_average_width)
     audio_ma5k = np.round(audio_ma5k).astype(np.bool)    
-    
-    # Dilate the voiced regions			
+
     audio_ma5k = binary_dilation(audio_ma5k, np.ones(vad_max_silence_length + 1))
     audio_ma5k = np.repeat(audio_ma5k, samples_per_wind0w) 
     

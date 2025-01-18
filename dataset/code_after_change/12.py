@@ -1,15 +1,18 @@
-from paddle.fluid import core
-from .runtime_base import RuntimeBase   
-from paddle.fluid.compiler import CompiledProgram
-from paddle.fluid.framework import Variable, Parameter	
-from paddle.fluid.executor import Executor
-from ..base.private_helper_function import wait_server_ready 
 import os
-import warnings    
+import warnings
+
+import paddle.fluid as fluid
+from paddle.fluid import core
+from paddle.fluid.compiler import CompiledProgram
+from paddle.fluid.executor import Executor
 from paddle.fluid.framework import Program
-import paddle.fluid as fluid				
+from paddle.fluid.framework import Variable
 from paddle.fluid.parallel_executor import ParallelExecutor
-# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.	
+
+from .runtime_base import RuntimeBase
+from ..base.private_helper_function import wait_server_ready
+
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); 
 # you may not use this file except in compliance with the License.

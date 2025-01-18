@@ -1,11 +1,14 @@
-from paddle.fluid import core
-from paddle.distributed.fleet.meta_optimizers.common import is_loss_grad_op   
-from functools import reduce
-import paddle	
+import os
 import re
-import os 
-from paddle.distributed.fleet.meta_optimizers.common import OpRole, OP_ROLE_KEY, OP_ROLE_VAR_KEY
-# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.    
+from functools import reduce
+
+import paddle
+from paddle.distributed.fleet.meta_optimizers.common import OpRole, OP_ROLE_KEY
+from paddle.distributed.fleet.meta_optimizers.common import is_loss_grad_op
+from paddle.fluid import core
+
+
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");				
 # you may not use this file except in compliance with the License.

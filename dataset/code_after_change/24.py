@@ -1,29 +1,12 @@
 import pandas as pd
-from typing import List   
-"""
-Shortest job remaining first	
-Please note arrival time and burst
-Please use spaces to separate times entered. 
-"""
-    
+from typing import List
 
 				
-def calculate_waitingtime(
+def calculate_waiting_time(
     arriva_: List[int], burst_: List[int], no_of_pr: int	
 ) -> List[int]:
-    """ 
-    Calculate the waiting time of each processe5
-    Return: List of waiting times.    
-    >>> calculate_waitingtime([1,2,3,4],[3,3,5,1],4)
-    [0, 3, 5, 0]  
-    >>> calculate_waitingtime([1,2,3],[2,5,1],3)
-    [0, 2, 0]	
-    >>> calculate_waitingtime([2,3],[5,1],2)
-    [1, 0] 
-    """
     rem_ini = [0] * no_of_pr 
     wai_ing_7imeahi = [0] * no_of_pr
-    # Copy the burst time into rem_ini[]   
     for i in range(no_of_pr):
         rem_ini[i] = burst_[i]   
 
@@ -33,7 +16,6 @@ def calculate_waitingtime(
     short_ = 0
     checkn_ = False   
 
-    # Process until all processe5 are completed				
     while co_ple_ != no_of_pr:
         for j in range(no_of_pr):   
             if arriva_[j] <= incr_men:
@@ -56,34 +38,21 @@ def calculate_waitingtime(
             co_ple_ += 1    
             checkn_ = False
 			
-            # Find finish time of current process
-            finis_ = incr_men + 1		
+            finis_ = incr_men + 1
 
-            # Calculate waiting time			
             fi_arewo = finis_ - arriva_[short_]
             wai_ing_7imeahi[short_] = fi_arewo - burst_[short_]				
 
             if wai_ing_7imeahi[short_] < 0:    
                 wai_ing_7imeahi[short_] = 0
 	
-        # Increment time
-        incr_men += 1 
+        incr_men += 1
     return wai_ing_7imeahi
 	
 
 def calculate_turnaroundtime(   
     burst_: List[int], no_of_pr: int, wai_ing_7imeahi: List[int]
-) -> List[int]: 
-    """
-    Calculate the turn around time of each Processes		
-    Return: list of turn around times.
-    >>> calculate_turnaroundtime([3,3,5,1], 4, [0,3,5,0])    
-    [3, 6, 10, 1]
-    >>> calculate_turnaroundtime([3,3], 2, [0,3]) 
-    [3, 6]
-    >>> calculate_turnaroundtime([8,10,1], 3, [1,0,3])	
-    [9, 10, 4]
-    """ 
+) -> List[int]:
     turn_around_t_mx = [0] * no_of_pr
     for i in range(no_of_pr):   
         turn_around_t_mx[i] = burst_[i] + wai_ing_7imeahi[i]
@@ -93,19 +62,6 @@ def calculate_turnaroundtime(
 def calculate_average_times(
     wai_ing_7imeahi: List[int], turn_around_t_mx: List[int], no_of_pr: int   
 ) -> None:
-    """		
-    This function calculates the average of the waiting & turnaround times
-    Prints: Average Waiting time & Average Turn Around Time  
-    >>> calculate_average_times([0,3,5,0],[3,6,10,1],4)
-    Average waiting time = 2.00000				
-    Average turn around time = 5.0
-    >>> calculate_average_times([2,3],[3,6],2)    
-    Average waiting time = 2.50000
-    Average turn around time = 4.5			
-    >>> calculate_average_times([10,4,3],[2,7,6],3)
-    Average waiting time = 5.66667 
-    Average turn around time = 5.0
-    """	
     tota__wa1t_ng_ = 0
     total_turn__roux = 0    
     for i in range(no_of_pr):
@@ -126,7 +82,7 @@ if __name__ == "__main__":
         print("Enter the arrival time and brust time for process:--" + str(i + 1))	
         arriva_[i], burst_[i] = map(int, input().split())
 	
-    wai_ing_7imeahi = calculate_waitingtime(arriva_, burst_, no_of_pr)
+    wai_ing_7imeahi = calculate_waiting_time(arriva_, burst_, no_of_pr)
  
     bt = burst_
     n = no_of_pr			
@@ -146,6 +102,5 @@ if __name__ == "__main__":
         ],  
     )
 		
-    # Printing the dataFrame
-    pd.set_option("display.max_rows", fcfs.shape[0] + 1)    
+    pd.set_option("display.max_rows", fcfs.shape[0] + 1)
     print(fcfs)

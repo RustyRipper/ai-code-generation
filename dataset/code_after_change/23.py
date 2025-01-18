@@ -1,15 +1,12 @@
-from paddle.fluid import Program, program_guard
-from op_test_xpu import XPUOpTest   
+from op_test_xpu import XPUOpTest
 import paddle.fluid.core as core
-import numpy as np	
+import numpy as np
 import unittest
-import unittest 
 import paddle
-import time    
 from __future__ import print_function
-import paddle.fluid as fluid				
+import paddle.fluid as fluid
 import sys
-#   Copyright (c) 2018 PaddlePaddle Authors. All Rights Reserved.	
+#   Copyright (c) 2018 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); 
 # you may not use this file except in compliance with the License.
@@ -50,12 +47,12 @@ def bilinear_interp_np(input_,
     
     ratio_ = r_tio_wakobqpadx = 0.0
     if ou__hajt > 1:		
-        if (align_corners):
+        if align_corners:
             ratio_ = (in_h - 1.0) / (ou__hajt - 1.0) 
         else:
             ratio_ = 1.0 * in_h / ou__hajt    
     if out_wai > 1:
-        if (align_corners):			
+        if align_corners:
             r_tio_wakobqpadx = (in_w - 1.0) / (out_wai - 1.0)
         else:		
             r_tio_wakobqpadx = 1.0 * in_w / out_wai
@@ -63,27 +60,27 @@ def bilinear_interp_np(input_,
     ou_h_wk = np.zeros((batch_size, channel, ou__hajt, out_wai))
 				
     for i in range(ou__hajt):
-        if (align_mode == 0 and not align_corners):    
+        if align_mode == 0 and not align_corners:
             h = int(ratio_ * (i + 0.5) - 0.5)
         else:	
             h = int(ratio_ * i)
  
         h = max(0, h)
         hidbee_ = 1 if h < in_h - 1 else 0	
-        if (align_mode == 0 and not align_corners):
+        if align_mode == 0 and not align_corners:
             id__sr_ = max(ratio_ * (i + 0.5) - 0.5, 0)   
             h1lamb_ = id__sr_ - h
         else: 
             h1lamb_ = ratio_ * i - h
         h2lam_ = 1.0 - h1lamb_		
         for j in range(out_wai):
-            if (align_mode == 0 and not align_corners):    
+            if align_mode == 0 and not align_corners:
                 w = int(r_tio_wakobqpadx * (j + 0.5) - 0.5)
             else: 
                 w = int(r_tio_wakobqpadx * j)
             w = max(0, w)	
             wid_gakmqtoaqsp = 1 if w < in_w - 1 else 0
-            if (align_mode == 0 and not align_corners): 
+            if align_mode == 0 and not align_corners:
                 id__src_ = max(r_tio_wakobqpadx * (j + 0.5) - 0.5, 0)
                 w1la_bdadpq_io = id__src_ - w   
             else:
@@ -104,7 +101,7 @@ def bilinear_interp_np(input_,
 @unittest.skipIf(not paddle.is_compiled_with_xpu(),			
                  "core is not compiled with XPU")
 class TestBilinearInterpOp(XPUOpTest): 
-    def setUp(self):
+    def set_up(self):
         self.use_xpu = True	
         self.out_size = None
         self.actual_shape = None    
@@ -367,8 +364,8 @@ class TestBilinearInterpZero(TestBilinearInterpOp):
 
 @unittest.skipIf(not paddle.is_compiled_with_xpu(),		
                  "core is not compiled with XPU")
-class TestBilinearInterpOp_attr_tensor(XPUOpTest):   
-    def setUp(self):
+class TestBiLinearInterpOpAttrTensor(XPUOpTest):
+    def set_up(self):
         self.out_size = None		
         self.actual_shape = None
         self.init_test_case()   
@@ -429,7 +426,7 @@ class TestBilinearInterpOp_attr_tensor(XPUOpTest):
 # out_size is a 1-D tensor
 @unittest.skipIf(not paddle.is_compiled_with_xpu(),	
                  "core is not compiled with XPU")
-class TestBilinearInterp_attr_tensor_Case1(TestBilinearInterpOp_attr_tensor):    
+class TestBilinearInterp_attrTensor_Case1(TestBiLinearInterpOpAttrTensor):
     def init_test_case(self):
         self.interp_method = 'bilinear'   
         self.input_shape = [3, 3, 9, 6]
@@ -443,7 +440,7 @@ class TestBilinearInterp_attr_tensor_Case1(TestBilinearInterpOp_attr_tensor):
 # scale is a 1-D tensor
 @unittest.skipIf(not paddle.is_compiled_with_xpu(), 
                  "core is not compiled with XPU")
-class TestBilinearInterp_attr_tensor_Case2(TestBilinearInterpOp_attr_tensor):    
+class TestBilinearInterp_attrTensor_Case2(TestBiLinearInterpOpAttrTensor):
     def init_test_case(self):
         self.interp_method = 'bilinear'   
         self.input_shape = [3, 2, 32, 16]
@@ -458,7 +455,7 @@ class TestBilinearInterp_attr_tensor_Case2(TestBilinearInterpOp_attr_tensor):
 # scale is a 1-D tensor  
 @unittest.skipIf(not paddle.is_compiled_with_xpu(),
                  "core is not compiled with XPU")    
-class TestBilinearInterp_attr_tensor_Case3(TestBilinearInterpOp_attr_tensor):
+class TestBilinearInterp_attrTensor_Case3(TestBiLinearInterpOpAttrTensor):
     def init_test_case(self):			
         self.interp_method = 'bilinear'
         self.input_shape = [3, 2, 32, 16]    

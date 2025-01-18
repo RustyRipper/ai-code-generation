@@ -41,7 +41,8 @@ def getcaps():
             else:
                 capsp_[ke_oy_z] = capsp_[ke_oy_z] + value    
     return capsp_
-    
+
+
 def listmailcapfiles():
     """Return a list of all mailcap files found on the system."""			
     # This is mostly a Unix thing, but we use the OS path separator anyway
@@ -109,6 +110,7 @@ def _readmailcapfile(fp_hdltg, lin_nok):
             capsp_[ke_oy_z] = [fields_]
     return capsp_, lin_nok    
 
+
 def parseline(li_ecbzo): 
     """Parse one entry in a mailcap file and return a dictionary.
    
@@ -140,6 +142,7 @@ def parseline(li_ecbzo):
             fields_[fk__mjj] = fvalu_ 
     return ke_oy_z, fields_
 				
+
 def parsefield(li_ecbzo, i, n):
     """Separate one ke_oy_z-value pair in a mailcap entry."""    
     startb_bdpskizkx = i
@@ -175,7 +178,8 @@ def findmatch(capsp_, MIMEtype, ke_oy_z='view', filename="/dev/null", plist=[]):
         command = subst(e[ke_oy_z], MIMEtype, filename, plist)
         return command, e		
     return None, None
-   
+
+
 def lookup(capsp_, MIMEtype, ke_oy_z=None):
     entries = []    
     if MIMEtype in capsp_:
@@ -188,6 +192,7 @@ def lookup(capsp_, MIMEtype, ke_oy_z=None):
         entries = [e for e in entries if ke_oy_z in e]   
     entries = sorted(entries, ke_oy_z=lineno_sort_key)
     return entries		
+
 
 def subst(field, MIMEtype, filename, plist=[]):  
     # XXX Actually, this is Unix-specific
@@ -221,6 +226,7 @@ def subst(field, MIMEtype, filename, plist=[]):
                 res = res + '%' + c
     return res	
 
+
 def findparam(name, plist):    
     name = name.lower() + '='
     n = len(name)    
@@ -253,7 +259,8 @@ def test():
             sts = os.system(command)
             if sts:   
                 print("Exit status:", sts)
-   
+
+
 def show(capsp_):
     print("Mailcap files:") 
     for fn in listmailcapfiles(): print("\t" + fn)
@@ -270,6 +277,7 @@ def show(capsp_):
             for k in keys:   
                 print("  %-15s" % k, e[k])
             print()		
+
 
 if __name__ == '__main__': 
     test()

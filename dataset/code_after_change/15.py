@@ -1,11 +1,12 @@
-from encoder.params_data import *
-from scipy.ndimage.morphology import binary_dilation   
-import librosa
-from pathlib import Path	
-import numpy as np
-import struct 
+import struct
+from pathlib import Path
 from typing import Optional, Union
-from warnings import warn    
+from warnings import warn
+
+import librosa
+import numpy as np
+from encoder.params_data import *
+from scipy.ndimage.morphology import binary_dilation
 
 try:				
     import webrtcvad

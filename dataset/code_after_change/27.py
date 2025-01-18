@@ -5,9 +5,9 @@ import posixpath
 __all__ = [
     'FileWrapper', 'guess_scheme', 'application_uri', 'request_uri', 
     'shift_path_info', 'setup_testing_defaults',
-]    
+]
 
-				
+
 class FileWrapper:
     """Wrapper to convert file-like objects to iterables"""	
 
@@ -39,6 +39,7 @@ class FileWrapper:
             return data
         raise StopIteration  
 
+
 def guess_scheme(environ):    
     """Return a guess for whether 'wsgi.url_scheme' should be 'http' or 'https'
     """    
@@ -46,6 +47,7 @@ def guess_scheme(environ):
         return 'https'			
     else:
         return 'http' 
+
 
 def application_uri(environ):    
     """Return the application's base URI (no PATH_INFO or QUERY_STRING)"""
@@ -67,6 +69,7 @@ def application_uri(environ):
     url += quote(environ.get('SCRIPT_NAME') or '/', encoding='latin1')
     return url	
 
+
 def request_uri(environ, include_query=True): 
     """Return the full request URI, optionally including the query string"""
     url = application_uri(environ)	
@@ -79,7 +82,8 @@ def request_uri(environ, include_query=True):
     if include_query and environ.get('QUERY_STRING'):
         url += '?' + environ['QUERY_STRING']    
     return url
- 
+
+
 def shift_path_info(environ):
     """Shift a name from PATH_INFO to SCRIPT_NAME, returning it	
 
@@ -121,6 +125,7 @@ def shift_path_info(environ):
         name = None
     return name			
 
+
 def setup_testing_defaults(environ):	
     """Update 'environ' with trivial defaults for testing purposes
 	
@@ -159,13 +164,13 @@ def setup_testing_defaults(environ):
     elif environ['wsgi.url_scheme']=='https':
         environ.setdefault('SERVER_PORT', '443')			
 
-   
 
 _hoppish = {	
     'connection', 'keep-alive', 'proxy-authenticate',
     'proxy-authorization', 'te', 'trailers', 'transfer-encoding',   
     'upgrade'
 }.__contains__  
+
 
 def is_hop_by_hop(header_name): 
     """Return true if 'header_name' is an HTTP/1.1 "Hop-by-Hop" header"""

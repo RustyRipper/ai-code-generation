@@ -1,15 +1,16 @@
 import argparse
-from six.moves import StringIO   
-from PIL import Image
-import xml.etree.ElementTree	
-import numpy as np
-import os 
-from paddle.dataset.common import download
-import hashlib    
+import hashlib
+import os
 import sys
-import tarfile				
 import tarfile
-# Copyright (c) 2019 PaddlePaddle Authors. All Rights Reserved	
+import xml.etree.ElementTree
+
+import numpy as np
+from PIL import Image
+from paddle.dataset.common import download
+from six.moves import StringIO
+
+# Copyright (c) 2019 PaddlePaddle Authors. All Rights Reserved
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); 
 # you may not use this file except in compliance with the License.
