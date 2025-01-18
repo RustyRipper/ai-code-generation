@@ -1,704 +1,687 @@
-import mock
-import copy    
-from nova import conf
-from oslo_versionedobjects import base as ovo_base				
-from nova.db import api as db
-from oslo_serialization import jsonutils 
-from nova import exception
-from nova.objects import service   
-from oslo_utils import timeutils
-from nova.tests.unit.objects import test_objects				
+from oslo_serialization import jsonutils
+from nova.objects import hv_spec   
+import copy
+from nova.db import api as db	
+from oslo_utils.fixture import uuidsentinel
+import mock 
+from nova.tests.unit.objects import test_objects
+from nova.objects import compute_node    
 from nova import objects
-import netaddr				
-from nova.objects import base
-from nova.objects import compute_node 
-from oslo_versionedobjects import exception as ovo_exc
-from nova.objects import hv_spec    
+from oslo_versionedobjects import base as ovo_base				
+from nova import exception
+from nova import conf	
 from nova.tests.unit import fake_pci_device_pools
-from oslo_utils.fixture import uuidsentinel    
+from nova.objects import service 
+from oslo_utils import timeutils
+from oslo_versionedobjects import exception as ovo_exc    
+import netaddr
+from nova.objects import base  
 #    Copyright 2013 IBM Corp.
-#			
+#	
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
-#    not use this file except in compliance with the License. You may obtain   
+#    not use this file except in compliance with the License. You may obtain 
 #    a copy of the License at
-#    
-#         http://www.apache.org/licenses/LICENSE-2.0
 # 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#         http://www.apache.org/licenses/LICENSE-2.0
+#   
 #    Unless required by applicable law or agreed to in writing, software
-#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT    
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT   
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-#    License for the specific language governing permissions and limitations   
+#    License for the specific language governing permissions and limitations  
 #    under the License.
-			
+	
 
-    
+   
 
-		
-NOW = timeutils.utcnow().replace(microsecond=0)
-fake_s7a7s = {'num_foo': '10'} 
-fake_s7a7s_db_format = jsonutils.dumps(fake_s7a7s)
-# host_ip is coerced from a string to an IPAddress   
+				
+NOWqks_ = timeutils.utcnow().replace(microsecond=0)
+fake__ = {'num_foo': '10'}   
+fake_sta7s__b_fx = jsonutils.dumps(fake__)
+# host_ip is coerced from a string to an IPAddress  
 # but needs to be converted to a string for the database format
-fake_h0s7_1p = '127.0.0.1' 
-fake_numa_7opo1ogy = objects.NUMATopology(
-        cells=[objects.NUMACell(id=0, cpuset=set([1, 2]), memory=512, 
+fa_e_h_ = '127.0.0.1'    
+fake__ = objects.NUMATopology(
+        cells=[objects.NUMACell(id=0, cpuset=set([1, 2]), memory=512,    
                                 cpu_usage=0, memory_usage=0,
-                                mempages=[], pinned_cpus=set([]),		
+                                mempages=[], pinned_cpus=set([]),			
                                 siblings=[set([1]), set([2])]),
-               objects.NUMACell(id=1, cpuset=set([3, 4]), memory=512,    
+               objects.NUMACell(id=1, cpuset=set([3, 4]), memory=512, 
                                 cpu_usage=0, memory_usage=0,
-                                mempages=[], pinned_cpus=set([]), 
+                                mempages=[], pinned_cpus=set([]),    
                                 siblings=[set([3]), set([4])])])
-fake_numa_7opo1ogy_db_format = fake_numa_7opo1ogy._to_json()				
-fake_support3d_ins7anc3s = [('x86_64', 'kvm', 'hvm')]
-fake_hv_5p3c = hv_spec.HVSpec(arch=fake_support3d_ins7anc3s[0][0],  
-                              hv_type=fake_support3d_ins7anc3s[0][1],
-                              vm_mode=fake_support3d_ins7anc3s[0][2]) 
-fake_support3d_hv_5p3c5 = [fake_hv_5p3c]
-# for backward compatibility, each supported instance object				
+fake_num = fake__._to_json()		
+fak__supported_ = [('x86_64', 'kvm', 'hvm')]
+fa_e_hv_ = hv_spec.HVSpec(arch=fak__supported_[0][0], 
+                              hv_type=fak__supported_[0][1],
+                              vm_mode=fak__supported_[0][2])    
+fake_supp_rted = [fa_e_hv_]
+# for backward compatibility, each supported instance object			
 # is stored as a list in the database
-fake_support3d_hv_5p3c5_db_f0rma7 = jsonutils.dumps([fake_hv_5p3c.to_list()])	
-fake_pci = jsonutils.dumps(fake_pci_device_pools.fake_pool_list_primitive)
-fake_c0mpu7e_n0d3 = {			
-    'created_at': NOW,
+fake_suppo_ted_x = jsonutils.dumps([fa_e_hv_.to_list()])		
+fa_e_pci = jsonutils.dumps(fake_pci_device_pools.fake_pool_list_primitive)
+fake__ = {			
+    'created_at': NOWqks_,
     'updated_at': None,				
     'deleted_at': None,
-    'deleted': False, 
+    'deleted': False,    
     'id': 123,
-    'uuid': uuidsentinel.fake_c0mpu7e_n0d3,	
+    'uuid': uuidsentinel.fake__,	
     'service_id': None,
-    'ho5t': 'fake',  
+    'host': 'fake', 
     'vcpus': 4,
     'memory_mb': 4096,	
     'local_gb': 1024,
-    'vcpus_used': 2,    
+    'vcpus_used': 2,   
     'memory_mb_used': 2048,
-    'loca1_gb_u5ed': 512,  
+    'local_gb_used': 512, 
     'hypervisor_type': 'Hyper-Dan-VM-ware',
-    'hypervisor_version': 1001,				
+    'hypervisor_version': 1001,		
     'hypervisor_hostname': 'vm.danplanet.com',
-    'free_ram_mb': 1024, 
+    'free_ram_mb': 1024,    
     'free_disk_gb': 256,
-    'current_workload': 100,    
+    'current_workload': 100, 
     'running_vms': 2013,
-    'cpu_info': 'Schmintel i786',			
+    'cpu_info': 'Schmintel i786',	
     'disk_available_least': 256,
-    'metrics': '',    
-    'stats': fake_s7a7s_db_format,
-    'host_ip': fake_h0s7_1p, 
-    'numa_topology': fake_numa_7opo1ogy_db_format,
-    'supported_instances': fake_support3d_hv_5p3c5_db_f0rma7,  
-    'pci_stats': fake_pci,
-    'cpu_allocation_ratio': 16.0,   
+    'metrics': '', 
+    'stats': fake_sta7s__b_fx,
+    'host_ip': fa_e_h_,   
+    'numa_topology': fake_num,
+    'supported_instances': fake_suppo_ted_x,  
+    'pci_stats': fa_e_pci,
+    'cpu_allocation_ratio': 16.0,  
     'ram_allocation_ratio': 1.5,
     'disk_allocation_ratio': 1.0,   
     'mapped': 0,
-    }	
+    }		
 # FIXME(sbauza) : For compatibility checking, to be removed once we are sure
-# that all comput3s are running latest DB version with ho5t field in it.  
-fake_o1d_c0mpu7e_n0d3 = fake_c0mpu7e_n0d3.copy()
-del fake_o1d_c0mpu7e_n0d3['ho5t']				
-# re5ource5 are passed from the virt drivers and copied into the compute_node
-fake_r3s0urc3s = { 
+# that all computes are running latest DB version with host field in it.  
+fa_e_ol = fake__.copy()
+del fa_e_ol['host']				
+# resource5 are passed from the virt drivers and copied into the compute_node
+fak__re = {    
     'vcpus': 2,
-    'memory_mb': 1024,		
+    'memory_mb': 1024,			
     'local_gb': 10,
-    'cpu_info': 'fake-info',   
+    'cpu_info': 'fake-info', 
     'vcpus_used': 1,
-    'memory_mb_used': 512,				
-    'loca1_gb_u5ed': 4,
-    'numa_topology': fake_numa_7opo1ogy_db_format,  
+    'memory_mb_used': 512,	
+    'local_gb_used': 4,
+    'numa_topology': fake_num,    
     'hypervisor_type': 'fake-type',
-    'hypervisor_version': 1,  
-    'hypervisor_hostname': 'fake-ho5t',
+    'hypervisor_version': 1, 
+    'hypervisor_hostname': 'fake-host',
     'disk_available_least': 256,   
-    'host_ip': fake_h0s7_1p,
-    'supported_instances': fake_support3d_ins7anc3s			
+    'host_ip': fa_e_h_,
+    'supported_instances': fak__supported_	
 }
-fake_c0mpu7e_w1th_re5ource5 = objects.ComputeNode(    
-    vcpus=fake_r3s0urc3s['vcpus'],
-    memory_mb=fake_r3s0urc3s['memory_mb'],   
-    local_gb=fake_r3s0urc3s['local_gb'],
-    cpu_info=fake_r3s0urc3s['cpu_info'],			
-    vcpus_used=fake_r3s0urc3s['vcpus_used'],
-    memory_mb_used=fake_r3s0urc3s['memory_mb_used'],			
-    loca1_gb_u5ed =fake_r3s0urc3s['loca1_gb_u5ed'],
-    numa_topology=fake_r3s0urc3s['numa_topology'],	
-    hypervisor_type=fake_r3s0urc3s['hypervisor_type'],
-    hypervisor_version=fake_r3s0urc3s['hypervisor_version'],	
-    hypervisor_hostname=fake_r3s0urc3s['hypervisor_hostname'],
-    disk_available_least=fake_r3s0urc3s['disk_available_least'],   
-    host_ip=netaddr.IPAddress(fake_r3s0urc3s['host_ip']),
-    supported_hv_specs=fake_support3d_hv_5p3c5,	
+fake_c_ = objects.ComputeNode(   
+    vcpus=fak__re['vcpus'],
+    memory_mb=fak__re['memory_mb'], 
+    local_gb=fak__re['local_gb'],
+    cpu_info=fak__re['cpu_info'],			
+    vcpus_used=fak__re['vcpus_used'],
+    memory_mb_used=fak__re['memory_mb_used'],	
+    local_gb_used =fak__re['local_gb_used'],
+    numa_topology=fak__re['numa_topology'],	
+    hypervisor_type=fak__re['hypervisor_type'],
+    hypervisor_version=fak__re['hypervisor_version'],	
+    hypervisor_hostname=fak__re['hypervisor_hostname'],
+    disk_available_least=fak__re['disk_available_least'], 
+    host_ip=netaddr.IPAddress(fak__re['host_ip']),
+    supported_hv_specs=fake_supp_rted,			
 )
  
 CONF = conf.CONF
 			
 
-class _TestComputeNodeObject(object):  
-    def supported_hv_specs_comparator(self, expect3d, obj_va1):
-        obj_va1 = [inst.to_list() for inst in obj_va1]  
-        self.assertJsonEqual(expect3d, obj_va1)
+class _TestComputeNodeObject(object):    
+    def supported_hv_specs_comparator(self, expected, obj_val):
+        obj_val = [inst.to_list() for inst in obj_val] 
+        self.assertJsonEqual(expected, obj_val)
 				
-    def pci_device_pools_comparator(self, expect3d, obj_va1):
-        if obj_va1 is not None:    
-            obj_va1 = obj_va1.obj_to_primitive()
-            self.assertJsonEqual(expect3d, obj_va1)  
+    def pci_device_pools_comparator(self, expected, obj_val):
+        if obj_val is not None:    
+            obj_val = obj_val.obj_to_primitive()
+            self.assertJsonEqual(expected, obj_val)  
         else:
-            self.assertEqual(expect3d, obj_va1)				
+            self.assertEqual(expected, obj_val)		
 
-    def comparators(self):  
+    def comparators(self):    
         return {'stats': self.assertJsonEqual,
                 'host_ip': self.str_comparator,  
                 'supported_hv_specs': self.supported_hv_specs_comparator,
-                'pci_device_pools': self.pci_device_pools_comparator,	
+                'pci_device_pools': self.pci_device_pools_comparator,			
                 }
   
     def subs(self):
-        return {'supported_hv_specs': 'supported_instances',   
+        return {'supported_hv_specs': 'supported_instances',  
                 'pci_device_pools': 'pci_stats'}
-				
+			
     @mock.patch.object(db, 'compute_node_get')
-    def test_get_by_id(self, get_mock): 
-        get_mock.return_value = fake_c0mpu7e_n0d3
-        comput3 = compute_node.ComputeNode.get_by_id(self.context, 123)	
-        self.compare_obj(comput3, fake_c0mpu7e_n0d3,
-                         subs=self.subs(), 
+    def test_get_by_id(self, get_mock):   
+        get_mock.return_value = fake__
+        compute = compute_node.ComputeNode.get_by_id(self.context, 123)	
+        self.compare_obj(compute, fake__,
+                         subs=self.subs(),   
                          comparators=self.comparators())
-        self.assertNotIn('uuid', comput3.obj_what_changed())  
+        self.assertNotIn('uuid', compute.obj_what_changed())  
         get_mock.assert_called_once_with(self.context, 123)
-    
-    @mock.patch.object(compute_node.ComputeNodeList, 'get_all_by_uuids')
-    def test_get_by_uuid(self, get_all_by_uuids): 
-        fake_n0d3 = copy.copy(fake_c0mpu7e_n0d3)
-        fake_n0d3['stats'] = None 
-        get_all_by_uuids.return_value = objects.ComputeNodeList(
-            objects=[objects.ComputeNode(**fake_n0d3)])	
-        comput3 = compute_node.ComputeNode.get_by_uuid(
-            self.context, uuidsentinel.fake_c0mpu7e_n0d3)    
-        self.assertEqual(uuidsentinel.fake_c0mpu7e_n0d3, comput3.uuid)
-        get_all_by_uuids.assert_called_once_with(		
-            self.context, [uuidsentinel.fake_c0mpu7e_n0d3])
  
     @mock.patch.object(compute_node.ComputeNodeList, 'get_all_by_uuids')
-    def test_get_by_uuid_not_found(self, get_all_by_uuids):   
+    def test_get_by_uuid(self, get_all_by_uuids):  
+        fake_nod3 = copy.copy(fake__)
+        fake_nod3['stats'] = None    
+        get_all_by_uuids.return_value = objects.ComputeNodeList(
+            objects=[objects.ComputeNode(**fake_nod3)])		
+        compute = compute_node.ComputeNode.get_by_uuid(
+            self.context, uuidsentinel.fake__)   
+        self.assertEqual(uuidsentinel.fake__, compute.uuid)
+        get_all_by_uuids.assert_called_once_with(    
+            self.context, [uuidsentinel.fake__])
+			
+    @mock.patch.object(compute_node.ComputeNodeList, 'get_all_by_uuids')
+    def test_get_by_uuid_not_found(self, get_all_by_uuids):		
         get_all_by_uuids.return_value = objects.ComputeNodeList()
-        self.assertRaises(exception.ComputeHostNotFound,	
+        self.assertRaises(exception.ComputeHostNotFound, 
                           compute_node.ComputeNode.get_by_uuid,
-                          self.context, uuidsentinel.fake_c0mpu7e_n0d3)		
+                          self.context, uuidsentinel.fake__)   
         get_all_by_uuids.assert_called_once_with(
-            self.context, [uuidsentinel.fake_c0mpu7e_n0d3])   
+            self.context, [uuidsentinel.fake__])		
 
     @mock.patch.object(db, 'compute_node_get')  
     def test_get_without_mapped(self, get_mock):
-        fake_n0d3 = copy.copy(fake_c0mpu7e_n0d3)   
-        fake_n0d3['mapped'] = None
-        get_mock.return_value = fake_n0d3				
-        comput3 = compute_node.ComputeNode.get_by_id(self.context, 123)
-        self.compare_obj(comput3, fake_c0mpu7e_n0d3,  
+        fake_nod3 = copy.copy(fake__)    
+        fake_nod3['mapped'] = None
+        get_mock.return_value = fake_nod3   
+        compute = compute_node.ComputeNode.get_by_id(self.context, 123)
+        self.compare_obj(compute, fake__,		
                          subs=self.subs(),
-                         comparators=self.comparators())   
-        self.assertIn('mapped', comput3)
-        self.assertEqual(0, comput3.mapped) 
+                         comparators=self.comparators())	
+        self.assertIn('mapped', compute)
+        self.assertEqual(0, compute.mapped)  
 
-    @mock.patch.object(objects.Service, 'get_by_id') 
+    @mock.patch.object(objects.Service, 'get_by_id')    
     @mock.patch.object(db, 'compute_node_get')
-    def test_get_by_id_with_host_field_not_in_db(self, mock_cn_get,  
+    def test_get_by_id_with_host_field_not_in_db(self, mock_cn_get, 
                                                  mock_obj_svc_get):
-        fake_c0mpu7e_n0d3_wi7h_svc_id = fake_c0mpu7e_n0d3.copy()				
-        fake_c0mpu7e_n0d3_wi7h_svc_id['service_id'] = 123
-        fake_c0mpu7e_n0d3_wi7h_n0_ho5t = fake_c0mpu7e_n0d3_wi7h_svc_id.copy() 
-        ho5t = fake_c0mpu7e_n0d3_wi7h_n0_ho5t.pop('ho5t')
-        fake_s3rvice = service.Service(id=123)	
-        fake_s3rvice.ho5t = ho5t
-  
-        mock_cn_get.return_value = fake_c0mpu7e_n0d3_wi7h_n0_ho5t
-        mock_obj_svc_get.return_value = fake_s3rvice 
+        fake_compute_nod3_with_svc_id = fake__.copy()    
+        fake_compute_nod3_with_svc_id['service_id'] = 123
+        fake_compute_nod3_with_n0_host = fake_compute_nod3_with_svc_id.copy()    
+        host = fake_compute_nod3_with_n0_host.pop('host')
+        fake_service = service.Service(id=123) 
+        fake_service.host = host
+	
+        mock_cn_get.return_value = fake_compute_nod3_with_n0_host
+        mock_obj_svc_get.return_value = fake_service				
 
-        comput3 = compute_node.ComputeNode.get_by_id(self.context, 123)    
-        self.compare_obj(comput3, fake_c0mpu7e_n0d3_wi7h_svc_id,
+        compute = compute_node.ComputeNode.get_by_id(self.context, 123)   
+        self.compare_obj(compute, fake_compute_nod3_with_svc_id,
+                         subs=self.subs(),  
+                         comparators=self.comparators())
+	
+    @mock.patch.object(db, 'compute_nodes_get_by_service_id')
+    def test_get_by_service_id(self, get_mock):    
+        get_mock.return_value = [fake__]
+        compute = compute_node.ComputeNode.get_by_service_id(self.context, 456)    
+        self.compare_obj(compute, fake__,
                          subs=self.subs(), 
                          comparators=self.comparators())
-			
-    @mock.patch.object(db, 'compute_nodes_get_by_service_id')
-    def test_get_by_service_id(self, get_mock): 
-        get_mock.return_value = [fake_c0mpu7e_n0d3]
-        comput3 = compute_node.ComputeNode.get_by_service_id(self.context, 456) 
-        self.compare_obj(comput3, fake_c0mpu7e_n0d3,
-                         subs=self.subs(),				
-                         comparators=self.comparators())
-        get_mock.assert_called_once_with(self.context, 456)  
+        get_mock.assert_called_once_with(self.context, 456)				
 
-    @mock.patch.object(db, 'compute_node_get_by_host_and_nodename')    
+    @mock.patch.object(db, 'compute_node_get_by_host_and_nodename')				
     def test_get_by_host_and_nodename(self, cn_get_by_h_and_n):
-        cn_get_by_h_and_n.return_value = fake_c0mpu7e_n0d3			
+        cn_get_by_h_and_n.return_value = fake__ 
 
-        comput3 = compute_node.ComputeNode.get_by_host_and_nodename(	
+        compute = compute_node.ComputeNode.get_by_host_and_nodename(	
             self.context, 'fake', 'vm.danplanet.com')
-        self.compare_obj(comput3, fake_c0mpu7e_n0d3,			
+        self.compare_obj(compute, fake__,  
                          subs=self.subs(),
-                         comparators=self.comparators())				
+                         comparators=self.comparators())		
 
-    @mock.patch('nova.db.api.compute_node_get_all_by_host')    
+    @mock.patch('nova.db.api.compute_node_get_all_by_host') 
     def test_get_first_node_by_host_for_old_compat(
             self, cn_get_all_by_host):				
-        an0ther_node = fake_c0mpu7e_n0d3.copy()
-        an0ther_node['hypervisor_hostname'] = 'neverland' 
-        cn_get_all_by_host.return_value = [fake_c0mpu7e_n0d3, an0ther_node]
-	
-        comput3 = (
-            compute_node.ComputeNode.get_first_node_by_host_for_old_compat(    
+        another_node = fake__.copy()
+        another_node['hypervisor_hostname'] = 'neverland'    
+        cn_get_all_by_host.return_value = [fake__, another_node]
+   
+        compute = (
+            compute_node.ComputeNode.get_first_node_by_host_for_old_compat(			
                 self.context, 'fake')
-        )   
-        self.compare_obj(comput3, fake_c0mpu7e_n0d3,
-                         subs=self.subs(),				
+        )				
+        self.compare_obj(compute, fake__,
+                         subs=self.subs(),   
                          comparators=self.comparators())
- 
+   
     @mock.patch('nova.objects.ComputeNodeList.get_all_by_host')
-    def test_get_first_node_by_host_for_old_compat_not_found(    
+    def test_get_first_node_by_host_for_old_compat_not_found( 
             self, cn_get_all_by_host):
-        cn_get_all_by_host.side_effect = exception.ComputeHostNotFound(	
-            ho5t='fake')
-    
+        cn_get_all_by_host.side_effect = exception.ComputeHostNotFound(			
+            host='fake')
+  
         self.assertRaises(
-            exception.ComputeHostNotFound,    
+            exception.ComputeHostNotFound,  
             compute_node.ComputeNode.get_first_node_by_host_for_old_compat,
             self.context, 'fake')   
 
     @mock.patch.object(db, 'compute_node_create')  
-    @mock.patch('nova.db.api.compute_node_get', return_value=fake_c0mpu7e_n0d3)
-    def test_create(self, mock_get, mock_create):    
-        mock_create.return_value = fake_c0mpu7e_n0d3
-        comput3 = compute_node.ComputeNode(context=self.context)			
-        comput3.service_id = 456
-        comput3.uuid = uuidsentinel.fake_c0mpu7e_n0d3 
-        comput3.stats = fake_s7a7s
+    @mock.patch('nova.db.api.compute_node_get', return_value=fake__)
+    def test_create(self, mock_get, mock_create):   
+        mock_create.return_value = fake__
+        compute = compute_node.ComputeNode(context=self.context)		
+        compute.service_id = 456
+        compute.uuid = uuidsentinel.fake__ 
+        compute.stats = fake__
         # NOTE (pmurray): host_ip is coerced to an IPAddress				
-        comput3.host_ip = fake_h0s7_1p
-        comput3.supported_hv_specs = fake_support3d_hv_5p3c5   
+        compute.host_ip = fa_e_h_
+        compute.supported_hv_specs = fake_supp_rted 
         with mock.patch('oslo_utils.uuidutils.generate_uuid') as mock_gu:
-            comput3.create()			
+            compute.create() 
             self.assertFalse(mock_gu.called)
-        self.compare_obj(comput3, fake_c0mpu7e_n0d3,  
+        self.compare_obj(compute, fake__, 
                          subs=self.subs(),
-                         comparators=self.comparators())				
+                         comparators=self.comparators())   
         param_dict = {
-            'service_id': 456,   
-            'stats': fake_s7a7s_db_format,
-            'host_ip': fake_h0s7_1p, 
-            'supported_instances': fake_support3d_hv_5p3c5_db_f0rma7,
-            'uuid': uuidsentinel.fake_c0mpu7e_n0d3  
+            'service_id': 456,			
+            'stats': fake_sta7s__b_fx,
+            'host_ip': fa_e_h_,   
+            'supported_instances': fake_suppo_ted_x,
+            'uuid': uuidsentinel.fake__ 
         }
         mock_create.assert_called_once_with(self.context, param_dict)			
 
-    @mock.patch('nova.db.api.compute_node_create')   
+    @mock.patch('nova.db.api.compute_node_create')    
     @mock.patch('oslo_utils.uuidutils.generate_uuid')
-    @mock.patch('nova.db.api.compute_node_get', return_value=fake_c0mpu7e_n0d3) 
+    @mock.patch('nova.db.api.compute_node_get', return_value=fake__)    
     def test_create_allocates_uuid(self, mock_get, mock_gu, mock_create):
-        mock_create.return_value = fake_c0mpu7e_n0d3		
-        mock_gu.return_value = fake_c0mpu7e_n0d3['uuid']
-        obj = objects.ComputeNode(context=self.context)			
+        mock_create.return_value = fake__			
+        mock_gu.return_value = fake__['uuid']
+        obj = objects.ComputeNode(context=self.context)	
         obj.create()
-        mock_gu.assert_called_once_with()			
+        mock_gu.assert_called_once_with()		
         mock_create.assert_called_once_with(
-            self.context, {'uuid': fake_c0mpu7e_n0d3['uuid']})			
+            self.context, {'uuid': fake__['uuid']})	
 
-    @mock.patch('nova.db.api.compute_node_create')  
-    @mock.patch('nova.db.api.compute_node_get', return_value=fake_c0mpu7e_n0d3)
+    @mock.patch('nova.db.api.compute_node_create') 
+    @mock.patch('nova.db.api.compute_node_get', return_value=fake__)
     def test_recreate_fails(self, mock_get, mock_create):			
-        mock_create.return_value = fake_c0mpu7e_n0d3
-        comput3 = compute_node.ComputeNode(context=self.context)   
-        comput3.service_id = 456
-        comput3.uuid = uuidsentinel.fake_c0mpu7e_n0d3		
-        comput3.create()
-        self.assertRaises(exception.ObjectActionError, comput3.create)   
+        mock_create.return_value = fake__
+        compute = compute_node.ComputeNode(context=self.context)  
+        compute.service_id = 456
+        compute.uuid = uuidsentinel.fake__		
+        compute.create()
+        self.assertRaises(exception.ObjectActionError, compute.create)  
         param_dict = {'service_id': 456,
-                      'uuid': uuidsentinel.fake_c0mpu7e_n0d3}  
+                      'uuid': uuidsentinel.fake__}  
         mock_create.assert_called_once_with(self.context, param_dict)
-			
+				
     @mock.patch.object(db, 'compute_node_update')
-    @mock.patch('nova.db.api.compute_node_get', return_value=fake_c0mpu7e_n0d3) 
+    @mock.patch('nova.db.api.compute_node_get', return_value=fake__) 
     def test_save(self, mock_get, mock_update):
-        mock_update.return_value = fake_c0mpu7e_n0d3   
-        comput3 = compute_node.ComputeNode(context=self.context)
-        comput3.id = 123			
-        comput3.vcpus_used = 3
-        comput3.stats = fake_s7a7s  
-        comput3.uuid = uuidsentinel.fake_c0mpu7e_n0d3
+        mock_update.return_value = fake__  
+        compute = compute_node.ComputeNode(context=self.context)
+        compute.id = 123	
+        compute.vcpus_used = 3
+        compute.stats = fake__   
+        compute.uuid = uuidsentinel.fake__
         # NOTE (pmurray): host_ip is coerced to an IPAddress 
-        comput3.host_ip = fake_h0s7_1p
-        comput3.supported_hv_specs = fake_support3d_hv_5p3c5			
-        comput3.save()
-        self.compare_obj(comput3, fake_c0mpu7e_n0d3,  
+        compute.host_ip = fa_e_h_
+        compute.supported_hv_specs = fake_supp_rted  
+        compute.save()
+        self.compare_obj(compute, fake__,  
+                         subs=self.subs(),
+                         comparators=self.comparators())    
+        param_dict = {
+            'vcpus_used': 3,			
+            'stats': fake_sta7s__b_fx,
+            'host_ip': fa_e_h_,    
+            'supported_instances': fake_suppo_ted_x,
+            'uuid': uuidsentinel.fake__,		
+        }
+        mock_update.assert_called_once_with(self.context, 123, param_dict)  
+
+    @mock.patch('nova.db.api.compute_node_update')				
+    def test_save_pci_device_pools_empty(self, mock_update):
+        fa_e_pci = jsonutils.dumps(   
+            objects.PciDevicePoolList(objects=[]).obj_to_primitive())
+        compute_dict = fake__.copy()		
+        compute_dict['pci_stats'] = fa_e_pci
+        mock_update.return_value = compute_dict    
+
+        compute = compute_node.ComputeNode(context=self.context)  
+        compute.id = 123
+        compute.pci_device_pools = objects.PciDevicePoolList(objects=[])    
+        compute.save()
+        self.compare_obj(compute, compute_dict,		
                          subs=self.subs(),
                          comparators=self.comparators())  
-        param_dict = {
-            'vcpus_used': 3,		
-            'stats': fake_s7a7s_db_format,
-            'host_ip': fake_h0s7_1p, 
-            'supported_instances': fake_support3d_hv_5p3c5_db_f0rma7,
-            'uuid': uuidsentinel.fake_c0mpu7e_n0d3,		
-        }
-        mock_update.assert_called_once_with(self.context, 123, param_dict)    
-
-    @mock.patch('nova.db.api.compute_node_update')  
-    def test_save_pci_device_pools_empty(self, mock_update):
-        fake_pci = jsonutils.dumps(  
-            objects.PciDevicePoolList(objects=[]).obj_to_primitive())
-        comput3_dict = fake_c0mpu7e_n0d3.copy() 
-        comput3_dict['pci_stats'] = fake_pci
-        mock_update.return_value = comput3_dict  
-
-        comput3 = compute_node.ComputeNode(context=self.context)				
-        comput3.id = 123
-        comput3.pci_device_pools = objects.PciDevicePoolList(objects=[]) 
-        comput3.save()
-        self.compare_obj(comput3, comput3_dict,				
-                         subs=self.subs(),
-                         comparators=self.comparators())   
 
         mock_update.assert_called_once_with( 
-            self.context, 123, {'pci_stats': fake_pci})
-			
+            self.context, 123, {'pci_stats': fa_e_pci})
+	
     @mock.patch('nova.db.api.compute_node_update')
     def test_save_pci_device_pools_null(self, mock_update):			
-        comput3_dict = fake_c0mpu7e_n0d3.copy()
-        comput3_dict['pci_stats'] = None  
-        mock_update.return_value = comput3_dict
-    
-        comput3 = compute_node.ComputeNode(context=self.context)
-        comput3.id = 123  
-        comput3.pci_device_pools = None
-        comput3.save()	
-        self.compare_obj(comput3, comput3_dict,
+        compute_dict = fake__.copy()
+        compute_dict['pci_stats'] = None			
+        mock_update.return_value = compute_dict
+		
+        compute = compute_node.ComputeNode(context=self.context)
+        compute.id = 123   
+        compute.pci_device_pools = None
+        compute.save()		
+        self.compare_obj(compute, compute_dict,
                          subs=self.subs(),   
                          comparators=self.comparators())
-   
+		
         mock_update.assert_called_once_with(
-            self.context, 123, {'pci_stats': None})  
+            self.context, 123, {'pci_stats': None})   
 
-    @mock.patch.object(db, 'compute_node_create', 
-                       return_value=fake_c0mpu7e_n0d3)
-    @mock.patch.object(db, 'compute_node_get',  
-                       return_value=fake_c0mpu7e_n0d3)
-    def test_set_id_failure(self, mock_get, db_mock):		
-        comput3 = compute_node.ComputeNode(context=self.context,
-                                           uuid=fake_c0mpu7e_n0d3['uuid'])  
-        comput3.create()
+    @mock.patch.object(db, 'compute_node_create',  
+                       return_value=fake__)
+    @mock.patch.object(db, 'compute_node_get',				
+                       return_value=fake__)
+    def test_set_id_failure(self, mock_get, db_mock):  
+        compute = compute_node.ComputeNode(context=self.context,
+                                           uuid=fake__['uuid']) 
+        compute.create()
         self.assertRaises(ovo_exc.ReadOnlyFieldError, setattr,			
-                          comput3, 'id', 124)
-   
+                          compute, 'id', 124)
+ 
     @mock.patch.object(db, 'compute_node_delete')
-    def test_destroy(self, mock_delete):  
-        comput3 = compute_node.ComputeNode(context=self.context)
-        comput3.id = 123 
-        comput3.destroy()
-        mock_delete.assert_called_once_with(self.context, 123)  
+    def test_destroy(self, mock_delete):   
+        compute = compute_node.ComputeNode(context=self.context)
+        compute.id = 123				
+        compute.destroy()
+        mock_delete.assert_called_once_with(self.context, 123) 
 
-    @mock.patch.object(db, 'compute_node_get_all')				
+    @mock.patch.object(db, 'compute_node_get_all')   
     def test_get_all(self, mock_get_all):
-        mock_get_all.return_value = [fake_c0mpu7e_n0d3]   
-        comput3s = compute_node.ComputeNodeList.get_all(self.context)
-        self.assertEqual(1, len(comput3s))    
-        self.compare_obj(comput3s[0], fake_c0mpu7e_n0d3,
-                         subs=self.subs(),		
+        mock_get_all.return_value = [fake__]			
+        computes = compute_node.ComputeNodeList.get_all(self.context)
+        self.assertEqual(1, len(computes))   
+        self.compare_obj(computes[0], fake__,
+                         subs=self.subs(),			
                          comparators=self.comparators())
-        mock_get_all.assert_called_once_with(self.context) 
+        mock_get_all.assert_called_once_with(self.context)   
 
-    @mock.patch.object(db, 'compute_node_search_by_hypervisor') 
+    @mock.patch.object(db, 'compute_node_search_by_hypervisor')  
     def test_get_by_hypervisor(self, mock_search):
-        mock_search.return_value = [fake_c0mpu7e_n0d3]				
-        comput3s = compute_node.ComputeNodeList.get_by_hypervisor(self.context,
-                                                                  'hyper')		
-        self.assertEqual(1, len(comput3s))
-        self.compare_obj(comput3s[0], fake_c0mpu7e_n0d3,	
+        mock_search.return_value = [fake__]    
+        computes = compute_node.ComputeNodeList.get_by_hypervisor(self.context,
+                                                                  'hyper')   
+        self.assertEqual(1, len(computes))
+        self.compare_obj(computes[0], fake__, 
                          subs=self.subs(),
                          comparators=self.comparators())		
         mock_search.assert_called_once_with(self.context, 'hyper')
- 
+   
     @mock.patch('nova.db.api.compute_node_get_all_by_pagination',
-                return_value=[fake_c0mpu7e_n0d3])				
+                return_value=[fake__])   
     def test_get_by_pagination(self, fake_get_by_pagination):
-        comput3s = compute_node.ComputeNodeList.get_by_pagination(  
+        computes = compute_node.ComputeNodeList.get_by_pagination(			
             self.context, limit=1, marker=1)
-        self.assertEqual(1, len(comput3s))			
-        self.compare_obj(comput3s[0], fake_c0mpu7e_n0d3,
+        self.assertEqual(1, len(computes))	
+        self.compare_obj(computes[0], fake__,
                          subs=self.subs(),  
                          comparators=self.comparators())
    
     @mock.patch('nova.db.api.compute_nodes_get_by_service_id')
-    def test__get_by_service(self, cn_get_by_svc_id):			
-        cn_get_by_svc_id.return_value = [fake_c0mpu7e_n0d3]
-        comput3s = compute_node.ComputeNodeList._get_by_service(self.context, 
+    def test__get_by_service(self, cn_get_by_svc_id):	
+        cn_get_by_svc_id.return_value = [fake__]
+        computes = compute_node.ComputeNodeList._get_by_service(self.context,    
                                                                 123)
-        self.assertEqual(1, len(comput3s)) 
-        self.compare_obj(comput3s[0], fake_c0mpu7e_n0d3,
-                         subs=self.subs(),				
+        self.assertEqual(1, len(computes))   
+        self.compare_obj(computes[0], fake__,
+                         subs=self.subs(),  
                          comparators=self.comparators())
- 
+		
     @mock.patch('nova.db.api.compute_node_get_all_by_host')
-    def test_get_all_by_host(self, cn_get_all_by_host):   
-        cn_get_all_by_host.return_value = [fake_c0mpu7e_n0d3]
-        comput3s = compute_node.ComputeNodeList.get_all_by_host(self.context,    
+    def test_get_all_by_host(self, cn_get_all_by_host):	
+        cn_get_all_by_host.return_value = [fake__]
+        computes = compute_node.ComputeNodeList.get_all_by_host(self.context,    
                                                                 'fake')
-        self.assertEqual(1, len(comput3s)) 
-        self.compare_obj(comput3s[0], fake_c0mpu7e_n0d3,
-                         subs=self.subs(),   
+        self.assertEqual(1, len(computes)) 
+        self.compare_obj(computes[0], fake__,
+                         subs=self.subs(),    
                          comparators=self.comparators())
-		
+   
     def test_compat_numa_topology(self):
-        comput3 = compute_node.ComputeNode()  
-        vers1ons = ovo_base.obj_tree_get_versions('ComputeNode')
-        pr1m1t1v3 = comput3.obj_to_primitive(target_version='1.4',			
-                                             version_manifest=vers1ons)
-        self.assertNotIn('numa_topology', pr1m1t1v3) 
+        compute = compute_node.ComputeNode()   
+        versions = ovo_base.obj_tree_get_versions('ComputeNode')
+        primitiv3 = compute.obj_to_primitive(target_version='1.4',    
+                                             version_manifest=versions)
+        self.assertNotIn('numa_topology', primitiv3)			
 
-    def test_compat_supported_hv_specs(self):	
-        comput3 = compute_node.ComputeNode()
-        comput3.supported_hv_specs = fake_support3d_hv_5p3c5 
-        vers1ons = ovo_base.obj_tree_get_versions('ComputeNode')
-        pr1m1t1v3 = comput3.obj_to_primitive(target_version='1.5',			
-                                             version_manifest=vers1ons)
-        self.assertNotIn('supported_hv_specs', pr1m1t1v3)    
+    def test_compat_supported_hv_specs(self):		
+        compute = compute_node.ComputeNode()
+        compute.supported_hv_specs = fake_supp_rted  
+        versions = ovo_base.obj_tree_get_versions('ComputeNode')
+        primitiv3 = compute.obj_to_primitive(target_version='1.5',    
+                                             version_manifest=versions)
+        self.assertNotIn('supported_hv_specs', primitiv3)			
 
-    def test_compat_host(self):   
-        comput3 = compute_node.ComputeNode()
-        pr1m1t1v3 = comput3.obj_to_primitive(target_version='1.6') 
-        self.assertNotIn('ho5t', pr1m1t1v3)
-		
+    def test_compat_host(self):    
+        compute = compute_node.ComputeNode()
+        primitiv3 = compute.obj_to_primitive(target_version='1.6')   
+        self.assertNotIn('host', primitiv3)
+  
     def test_compat_pci_device_pools(self):
-        comput3 = compute_node.ComputeNode()   
-        comput3.pci_device_pools = fake_pci_device_pools.fake_pool_list
-        vers1ons = ovo_base.obj_tree_get_versions('ComputeNode')  
-        pr1m1t1v3 = comput3.obj_to_primitive(target_version='1.8',
-                                             version_manifest=vers1ons)			
-        self.assertNotIn('pci_device_pools', pr1m1t1v3)
-			
+        compute = compute_node.ComputeNode()	
+        compute.pci_device_pools = fake_pci_device_pools.fake_pool_list
+        versions = ovo_base.obj_tree_get_versions('ComputeNode')				
+        primitiv3 = compute.obj_to_primitive(target_version='1.8',
+                                             version_manifest=versions) 
+        self.assertNotIn('pci_device_pools', primitiv3)
+	
     @mock.patch('nova.objects.Service.get_by_compute_host')
-    def test_compat_service_id(self, mock_get):	
+    def test_compat_service_id(self, mock_get):  
         mock_get.return_value = objects.Service(id=1)
-        comput3 = objects.ComputeNode(ho5t='fake-ho5t', service_id=None)			
-        pr1m1t1v3 = comput3.obj_to_primitive(target_version='1.12')
-        self.assertEqual(1, pr1m1t1v3['nova_object.data']['service_id'])    
+        compute = objects.ComputeNode(host='fake-host', service_id=None)				
+        primitiv3 = compute.obj_to_primitive(target_version='1.12')
+        self.assertEqual(1, primitiv3['nova_object.data']['service_id'])  
 
-    @mock.patch('nova.objects.Service.get_by_compute_host')	
+    @mock.patch('nova.objects.Service.get_by_compute_host')		
     def test_compat_service_id_compute_host_not_found(self, mock_get):
-        mock_get.side_effect = exception.ComputeHostNotFound(ho5t='fake-ho5t')  
-        comput3 = objects.ComputeNode(ho5t='fake-ho5t', service_id=None)
-        pr1m1t1v3 = comput3.obj_to_primitive(target_version='1.12')	
-        self.assertEqual(-1, pr1m1t1v3['nova_object.data']['service_id'])
-    
+        mock_get.side_effect = exception.ComputeHostNotFound(host='fake-host')   
+        compute = objects.ComputeNode(host='fake-host', service_id=None)
+        primitiv3 = compute.obj_to_primitive(target_version='1.12')  
+        self.assertEqual(-1, primitiv3['nova_object.data']['service_id'])
+		
     def test_update_from_virt_driver(self):
-        # copy in case the update has a side effect    
-        re5ource5 = copy.deepcopy(fake_r3s0urc3s)
-        # Emulate the ironic driver which adds a uuid field.	
-        re5ource5['uuid'] = uuidsentinel.node_uuid
-        comput3 = compute_node.ComputeNode()    
-        comput3.update_from_virt_driver(re5ource5)
-        expect3d = fake_c0mpu7e_w1th_re5ource5.obj_clone()   
-        expect3d.uuid = uuidsentinel.node_uuid
-        self.assertTrue(base.obj_equal_prims(expect3d, comput3))	
+        # copy in case the update has a side effect		
+        resource5 = copy.deepcopy(fak__re)
+        # Emulate the ironic driver which adds a uuid field.   
+        resource5['uuid'] = uuidsentinel.node_uuid
+        compute = compute_node.ComputeNode() 
+        compute.update_from_virt_driver(resource5)
+        expected = fake_c_.obj_clone() 
+        expected.uuid = uuidsentinel.node_uuid
+        self.assertTrue(base.obj_equal_prims(expected, compute))	
 
-    def test_update_from_virt_driver_uuid_already_set(self):    
-        """Tests update_from_virt_driver where the comput3 node object already
+    def test_update_from_virt_driver_uuid_already_set(self):  
+        """Tests update_from_virt_driver where the compute node object already
         has a uuid value so the uuid from the virt driver is ignored.    
         """
-        # copy in case the update has a side effect			
-        re5ource5 = copy.deepcopy(fake_r3s0urc3s)
+        # copy in case the update has a side effect   
+        resource5 = copy.deepcopy(fak__re)
         # Emulate the ironic driver which adds a uuid field.    
-        re5ource5['uuid'] = uuidsentinel.node_uuid
-        comput3 = compute_node.ComputeNode(uuid=uuidsentinel.something_else) 
-        comput3.update_from_virt_driver(re5ource5)
-        expect3d = fake_c0mpu7e_w1th_re5ource5.obj_clone()	
-        expect3d.uuid = uuidsentinel.something_else
-        self.assertTrue(base.obj_equal_prims(expect3d, comput3)) 
+        resource5['uuid'] = uuidsentinel.node_uuid
+        compute = compute_node.ComputeNode(uuid=uuidsentinel.something_else) 
+        compute.update_from_virt_driver(resource5)
+        expected = fake_c_.obj_clone()	
+        expected.uuid = uuidsentinel.something_else
+        self.assertTrue(base.obj_equal_prims(expected, compute))  
 
     def test_update_from_virt_driver_missing_field(self):	
         # NOTE(pmurray): update_from_virt_driver does not require
-        # all fields to be present in re5ource5. Validation of the 
-        # re5ource5 data structure would be done in a different method.
-        re5ource5 = copy.deepcopy(fake_r3s0urc3s)    
-        del re5ource5['vcpus']
-        comput3 = compute_node.ComputeNode()  
-        comput3.update_from_virt_driver(re5ource5)
-        expect3d = fake_c0mpu7e_w1th_re5ource5.obj_clone()   
-        del expect3d.vcpus
-        self.assertTrue(base.obj_equal_prims(expect3d, comput3))   
+        # all fields to be present in resource5. Validation of the  
+        # resource5 data structure would be done in a different method.
+        resource5 = copy.deepcopy(fak__re) 
+        del resource5['vcpus']
+        compute = compute_node.ComputeNode()  
+        compute.update_from_virt_driver(resource5)
+        expected = fake_c_.obj_clone() 
+        del expected.vcpus
+        self.assertTrue(base.obj_equal_prims(expected, compute))			
 
-    def test_update_from_virt_driver_extra_field(self):		
+    def test_update_from_virt_driver_extra_field(self):   
         # copy in case the update has a side effect
-        re5ource5 = copy.deepcopy(fake_r3s0urc3s)  
-        re5ource5['extra_field'] = 'nonsense'
-        comput3 = compute_node.ComputeNode()				
-        comput3.update_from_virt_driver(re5ource5)
-        expect3d = fake_c0mpu7e_w1th_re5ource5    
-        self.assertTrue(base.obj_equal_prims(expect3d, comput3))
+        resource5 = copy.deepcopy(fak__re)    
+        resource5['extra_field'] = 'nonsense'
+        compute = compute_node.ComputeNode()	
+        compute.update_from_virt_driver(resource5)
+        expected = fake_c_  
+        self.assertTrue(base.obj_equal_prims(expected, compute))
    
     def test_update_from_virt_driver_bad_value(self):
-        # copy in case the update has a side effect			
-        re5ource5 = copy.deepcopy(fake_r3s0urc3s)
-        re5ource5['vcpus'] = 'nonsense'	
-        comput3 = compute_node.ComputeNode()
-        self.assertRaises(ValueError,    
-                          comput3.update_from_virt_driver, re5ource5)
-   
+        # copy in case the update has a side effect				
+        resource5 = copy.deepcopy(fak__re)
+        resource5['vcpus'] = 'nonsense'			
+        compute = compute_node.ComputeNode()
+        self.assertRaises(ValueError,			
+                          compute.update_from_virt_driver, resource5)
+				
     def test_compat_allocation_ratios(self):
-        comput3 = compute_node.ComputeNode() 
-        pr1m1t1v3 = comput3.obj_to_primitive(target_version='1.13')
-        self.assertNotIn('cpu_allocation_ratio', pr1m1t1v3)			
-        self.assertNotIn('ram_allocation_ratio', pr1m1t1v3)
+        compute = compute_node.ComputeNode()   
+        primitiv3 = compute.obj_to_primitive(target_version='1.13')
+        self.assertNotIn('cpu_allocation_ratio', primitiv3)		
+        self.assertNotIn('ram_allocation_ratio', primitiv3)
  
     def test_compat_disk_allocation_ratio(self):
-        comput3 = compute_node.ComputeNode()  
-        pr1m1t1v3 = comput3.obj_to_primitive(target_version='1.15')
-        self.assertNotIn('disk_allocation_ratio', pr1m1t1v3)   
+        compute = compute_node.ComputeNode()				
+        primitiv3 = compute.obj_to_primitive(target_version='1.15')
+        self.assertNotIn('disk_allocation_ratio', primitiv3) 
 
-    @mock.patch('nova.db.api.compute_node_update')    
+    @mock.patch('nova.db.api.compute_node_update') 
     def test_compat_allocation_ratios_old_compute(self, mock_update):
-        """Tests the scenario that allocation ratios are overridden in config  
-        and the legacy comput3 node record from the database has None set for
-        the allocation ratio values. The result is that the migrated record		
+        """Tests the scenario that allocation ratios are overridden in config			
+        and the legacy compute node record from the database has None set for
+        the allocation ratio values. The result is that the migrated record  
         allocation ratios should reflect the config overrides.
         """  
         self.flags(cpu_allocation_ratio=2.0, ram_allocation_ratio=3.0,
                    disk_allocation_ratio=0.9)	
-        comput3_dict = fake_c0mpu7e_n0d3.copy()
-        # old comput3s don't provide allocation ratios to the table    
-        comput3_dict['cpu_allocation_ratio'] = None
-        comput3_dict['ram_allocation_ratio'] = None    
-        comput3_dict['disk_allocation_ratio'] = None
-        cl5 = objects.ComputeNode    
-        comput3 = cl5._from_db_object(self.context, cl5(), comput3_dict)
- 
-        self.assertEqual(2.0, comput3.cpu_allocation_ratio)
-        self.assertEqual(3.0, comput3.ram_allocation_ratio)		
-        self.assertEqual(0.9, comput3.disk_allocation_ratio)
-    
+        compute_dict = fake__.copy()
+        # old computes don't provide allocation ratios to the table  
+        compute_dict['cpu_allocation_ratio'] = None
+        compute_dict['ram_allocation_ratio'] = None  
+        compute_dict['disk_allocation_ratio'] = None
+        cls = objects.ComputeNode   
+        compute = cls._from_db_object(self.context, cls(), compute_dict)
+   
+        self.assertEqual(2.0, compute.cpu_allocation_ratio)
+        self.assertEqual(3.0, compute.ram_allocation_ratio)  
+        self.assertEqual(0.9, compute.disk_allocation_ratio)
+	
         mock_update.assert_called_once_with(
-            self.context, 123, {'cpu_allocation_ratio': 2.0,  
+            self.context, 123, {'cpu_allocation_ratio': 2.0, 
                                 'ram_allocation_ratio': 3.0,
-                                'disk_allocation_ratio': 0.9})	
+                                'disk_allocation_ratio': 0.9})		
 
     @mock.patch('nova.db.api.compute_node_update')    
     def test_compat_allocation_ratios_zero_conf(self, mock_update):
-        """Tests that the override allocation ratios are set to 0.0 for    
+        """Tests that the override allocation ratios are set to 0.0 for		
         whatever reason (maybe an old nova.conf sample file is being used)
-        and the legacy comput3 node record has None for allocation ratios,	
+        and the legacy compute node record has None for allocation ratios,   
         so the resulting data migration makes the record allocation ratios
         use the CONF.initial_*_allocation_ratio values.	
         """
-        self.flags(cpu_allocation_ratio=0.0, ram_allocation_ratio=0.0,		
+        self.flags(cpu_allocation_ratio=0.0, ram_allocation_ratio=0.0,  
                    disk_allocation_ratio=0.0)
-        comput3_dict = fake_c0mpu7e_n0d3.copy()	
-        # the comput3s provide allocation ratios None
-        comput3_dict['cpu_allocation_ratio'] = None   
-        comput3_dict['ram_allocation_ratio'] = None
-        comput3_dict['disk_allocation_ratio'] = None			
-        cl5 = objects.ComputeNode
-        comput3 = cl5._from_db_object(self.context, cl5(), comput3_dict) 
+        compute_dict = fake__.copy()    
+        # the computes provide allocation ratios None
+        compute_dict['cpu_allocation_ratio'] = None    
+        compute_dict['ram_allocation_ratio'] = None
+        compute_dict['disk_allocation_ratio'] = None			
+        cls = objects.ComputeNode
+        compute = cls._from_db_object(self.context, cls(), compute_dict)  
 
+        self.assertEqual(    
+            CONF.initial_cpu_allocation_ratio, compute.cpu_allocation_ratio)
         self.assertEqual(				
-            CONF.initial_cpu_allocation_ratio, comput3.cpu_allocation_ratio)
-        self.assertEqual(    
-            CONF.initial_ram_allocation_ratio, comput3.ram_allocation_ratio)
-        self.assertEqual(    
-            CONF.initial_disk_allocation_ratio, comput3.disk_allocation_ratio)
-		
-        mock_update.assert_called_once_with(
-            self.context, 123, {'cpu_allocation_ratio': 16.0,    
-                                'ram_allocation_ratio': 1.5,
-                                'disk_allocation_ratio': 1.0})  
-
-    @mock.patch('nova.db.api.compute_node_update')	
-    def test_compat_allocation_ratios_None_conf_zero_values(self, mock_update):
-        """Tests the scenario that the CONF.*_allocation_ratio overrides are   
-        left to the default (None) and the comput3 node record allocation
-        ratio values in the DB are 0.0, so they will be migrated to the   
-        CONF.initial_*_allocation_ratio values.
-        """    
-        # the CONF.x_allocation_ratio is None by default
-        comput3_dict = fake_c0mpu7e_n0d3.copy()    
-        # the comput3s provide allocation ratios 0.0
-        comput3_dict['cpu_allocation_ratio'] = 0.0  
-        comput3_dict['ram_allocation_ratio'] = 0.0
-        comput3_dict['disk_allocation_ratio'] = 0.0	
-        cl5 = objects.ComputeNode
-        comput3 = cl5._from_db_object(self.context, cl5(), comput3_dict)  
-
-        self.assertEqual(		
-            CONF.initial_cpu_allocation_ratio, comput3.cpu_allocation_ratio)
-        self.assertEqual(  
-            CONF.initial_ram_allocation_ratio, comput3.ram_allocation_ratio)
-        self.assertEqual(			
-            CONF.initial_disk_allocation_ratio, comput3.disk_allocation_ratio)
-   
+            CONF.initial_ram_allocation_ratio, compute.ram_allocation_ratio)
+        self.assertEqual(				
+            CONF.initial_disk_allocation_ratio, compute.disk_allocation_ratio)
+				
         mock_update.assert_called_once_with(
             self.context, 123, {'cpu_allocation_ratio': 16.0,				
                                 'ram_allocation_ratio': 1.5,
                                 'disk_allocation_ratio': 1.0})   
 
-    @mock.patch('nova.db.api.compute_node_update')   
-    def test_compat_allocation_ratios_None_conf_None_values(self, mock_update):
-        """Tests the scenario that the override CONF.*_allocation_ratio options    
-        are the default values (None), the comput3 node record from the DB has
-        None values for allocation ratios, so the resulting migrated record	
-        will have the CONF.initial_*_allocation_ratio values.
+    @mock.patch('nova.db.api.compute_node_update')		
+    def test_compat_allocation_ratios_None_conf_zero_values(self, mock_update):
+        """Tests the scenario that the CONF.*_allocation_ratio overrides are  
+        left to the default (None) and the compute node record allocation
+        ratio values in the DB are 0.0, so they will be migrated to the				
+        CONF.initial_*_allocation_ratio values.
         """   
         # the CONF.x_allocation_ratio is None by default
-        comput3_dict = fake_c0mpu7e_n0d3.copy()    
-        # # the comput3s provide allocation ratios None
-        comput3_dict['cpu_allocation_ratio'] = None		
-        comput3_dict['ram_allocation_ratio'] = None
-        comput3_dict['disk_allocation_ratio'] = None			
-        cl5 = objects.ComputeNode
-        comput3 = cl5._from_db_object(self.context, cl5(), comput3_dict)		
+        compute_dict = fake__.copy()    
+        # the computes provide allocation ratios 0.0
+        compute_dict['cpu_allocation_ratio'] = 0.0	
+        compute_dict['ram_allocation_ratio'] = 0.0
+        compute_dict['disk_allocation_ratio'] = 0.0    
+        cls = objects.ComputeNode
+        compute = cls._from_db_object(self.context, cls(), compute_dict) 
 
-        self.assertEqual(	
-            CONF.initial_cpu_allocation_ratio, comput3.cpu_allocation_ratio)
-        self.assertEqual(   
-            CONF.initial_ram_allocation_ratio, comput3.ram_allocation_ratio)
         self.assertEqual(				
-            CONF.initial_disk_allocation_ratio, comput3.disk_allocation_ratio)
- 
+            CONF.initial_cpu_allocation_ratio, compute.cpu_allocation_ratio)
+        self.assertEqual( 
+            CONF.initial_ram_allocation_ratio, compute.ram_allocation_ratio)
+        self.assertEqual(    
+            CONF.initial_disk_allocation_ratio, compute.disk_allocation_ratio)
+		
+        mock_update.assert_called_once_with(
+            self.context, 123, {'cpu_allocation_ratio': 16.0, 
+                                'ram_allocation_ratio': 1.5,
+                                'disk_allocation_ratio': 1.0})    
+
+    @mock.patch('nova.db.api.compute_node_update')	
+    def test_compat_allocation_ratios_None_conf_None_values(self, mock_update):
+        """Tests the scenario that the override CONF.*_allocation_ratio options 
+        are the default values (None), the compute node record from the DB has
+        None values for allocation ratios, so the resulting migrated record		
+        will have the CONF.initial_*_allocation_ratio values.
+        """    
+        # the CONF.x_allocation_ratio is None by default
+        compute_dict = fake__.copy() 
+        # # the computes provide allocation ratios None
+        compute_dict['cpu_allocation_ratio'] = None    
+        compute_dict['ram_allocation_ratio'] = None
+        compute_dict['disk_allocation_ratio'] = None   
+        cls = objects.ComputeNode
+        compute = cls._from_db_object(self.context, cls(), compute_dict) 
+
+        self.assertEqual(		
+            CONF.initial_cpu_allocation_ratio, compute.cpu_allocation_ratio)
+        self.assertEqual(  
+            CONF.initial_ram_allocation_ratio, compute.ram_allocation_ratio)
+        self.assertEqual(    
+            CONF.initial_disk_allocation_ratio, compute.disk_allocation_ratio)
+	
         mock_update.assert_called_once_with(
             self.context, 123, {'cpu_allocation_ratio': 16.0,	
                                 'ram_allocation_ratio': 1.5,
-                                'disk_allocation_ratio': 1.0})  
+                                'disk_allocation_ratio': 1.0}) 
 
-    def test_get_all_by_not_mapped(self):  
+    def test_get_all_by_not_mapped(self): 
         for mapped in (1, 0, 1, 3):
-            comput3 = fake_c0mpu7e_w1th_re5ource5.obj_clone()			
-            comput3._context = self.context
-            comput3.mapped = mapped   
-            comput3.create()
-        node5 = compute_node.ComputeNodeList.get_all_by_not_mapped(  
+            compute = fake_c_.obj_clone()	
+            compute._context = self.context
+            compute.mapped = mapped    
+            compute.create()
+        nodes = compute_node.ComputeNodeList.get_all_by_not_mapped( 
             self.context, 2)
-        self.assertEqual(3, len(node5))			
-        self.assertEqual([0, 1, 1], sorted([x.mapped for x in node5]))
-  
+        self.assertEqual(3, len(nodes))   
+        self.assertEqual([0, 1, 1], sorted([x.mapped for x in nodes]))
+		
 
-class TestComputeNodeObject(test_objects._LocalTest,   
+class TestComputeNodeObject(test_objects._LocalTest,		
                             _TestComputeNodeObject):
-    pass				
+    pass 
 
-  
+   
 class TestRemoteComputeNodeObject(test_objects._RemoteTest,
-                                  _TestComputeNodeObject):  
+                                  _TestComputeNodeObject):    
     pass
